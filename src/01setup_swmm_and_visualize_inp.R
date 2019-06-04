@@ -1,5 +1,8 @@
-install.packages("swmmr")
+#install.packages("swmmr")
 #initiate swmm
+#remotes::install_github("dleutnant/swmmr")
+#install.packages("stringi")
+library(stringi)
 library(swmmr)
 library(purrr) # to conveniently work with list objects
 # set path to inp
