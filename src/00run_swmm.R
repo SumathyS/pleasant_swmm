@@ -7,6 +7,7 @@ install.packages("swmmr")
 #install and load library dependencies
 #install.packages("magrittr")
 #install.packages("sensitivity")
+install.packages("tstrsplit")
 library(magrittr)
 library(plyr)
 library(reshape2)
@@ -71,7 +72,7 @@ swmmdir_executable <- paste(swmmdir_exe, swmm_binary, sep="")
 dll_binary<- "swmm5.dll"
 dlldir_executable <- paste(swmmdir_exe, dll_binary, sep="")
 #number of simulations 
-Nsims <- 2
+Nsims <- 1
 
 #simulation start and end
 #must have mm/dd/yyyy format
@@ -80,10 +81,11 @@ simend <- "12/31/2014"
 
 #run everything
 source(paste(swmmdir,"src/00run_swmm.R",sep = ""))
-# parameterize inputs
-#source(paste(swmmdir,"src/01b_lhs_parameterization.R",sep = ""))
+
 #setup swmm and visualize inp file
 source(paste(swmmdir,"src/01setup_swmm_and_visualize_inp.R",sep = ""))
+# parameterize inputs
+source(paste(swmmdir,"src/01b_lhs_parameterization.R",sep = ""))
 #write_update_run_swmm
 source(paste(swmmdir,"src/02update_swmm_par.R",sep = ""))
 
