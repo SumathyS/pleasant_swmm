@@ -1,3 +1,16 @@
+myrun <- data.frame(date = seq(as.Date(simstart, format="%m/%d/%Y"),as.Date(simend, format="%m/%d/%Y"), by = "day"))
+# ncols <- as.Date(as.character(simend), format="%m/%d/%Y")-
+#   as.Date(as.character(simstart), format="%m/%d/%Y")
+#Create empty dataframe for outputs
+#############PRZM###########################################
+# df_przm <- read.table(paste(pwcdir,"output/output",".zts", sep=""), header= FALSE, sep= "",
+#                       skip = 3, stringsAsFactors = FALSE, row.names=NULL)
+# # dim(df)
+# str(df)
+nrows_ro <- dim(myrun)[[1]]
+ncols_ro <- 2
+outputdf <- array(data=NA, c(nrows_ro,ncols_ro,Nsims))
+dim(outputdf)
 ###############update input file################
 set.seed(42)
 for (Ite in 1:Nsims){
@@ -21,7 +34,7 @@ for (Ite in 1:Nsims){
   # #update weather and output under each input folder
   # a[4]=paste(file_path_as_absolute(newdir),"/",pwc_weather_used, sep="")
   # a[6]=paste(file_path_as_absolute(newdir),"/","output.zts", sep="")
-  library(data.table)
+  #library(data.table)
   Num=113#Number of Applications
   NImperv=round(input_list[Ite,"NImperv"],2)
   row_0=176
@@ -71,11 +84,39 @@ for (Ite in 1:Nsims){
   tmp_rpt_file <- tempfile()
   tmp_out_file <- tempfile()
   
-   
+   #run SWMM
   swmm_files <- run_swmm(
     inp = "NPlesantCreek.inp",
     rpt = tmp_rpt_file,
     out = tmp_out_file
   )
+  #Read SWMM results
+  results <- data.frame(read_out(swmm_files$out, iType = 3, object_name = "18",vIndex = 4))
+  #move index column to first column [duplicate]
+  results <- cbind(DateTime = rownames(results), results)
+  rownames(results) <- 1:nrow(results)
+  results$DateTime<-as.Date(results$DateTime,"%Y-%m-%d %H:%M:%S")
+  #summarize results by date
+  results$Date <- as.Date(results$DateTime) 
+  results$Time <- format(as.POSIXct(results$DateTime) ,format = "%H:%M:%S") 
+  #head (results)
+  # write.csv(results , file = paste(swmmdir, "io/results_test.csv", sep = ""))
+  # DateTime<-seq(as.POSIXct(simstart, format="%m/%d/%Y"),
+  #                                  as.POSIXct(simend, format="%m/%d/%Y"),
+  #                                  by="hour")
+  # write.csv(DateTime , file = paste(swmmdir, "io/date_time.csv", sep = ""))
+  # colnames(results) <- c("total runoff")
+  # rownames(results) <- results$DateTime
+  
+  # df <- read.table(paste(newdir,"/","output",".zts", sep=""), header= FALSE, sep= "",
+  #                  skip = 3, stringsAsFactors = FALSE, row.names=NULL)
+
+  
+  dailyro<-aggregate(results["total_runoff"], by=results["Date"], sum)
+  #print(dailyro)
+  #print(dim(dailyro))
+  outputdf[1:nrows_ro,1:ncols_ro,Ite] <- abind(dailyro[1:nrows_ro,1:ncols_ro])
+  #print(outputdf)
+  #print(dim(outputdf))
   setwd(cwd)
 }

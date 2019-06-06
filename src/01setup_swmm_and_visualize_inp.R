@@ -4,7 +4,9 @@
 #install.packages("stringi")
 library(stringi)
 library(swmmr)
-library(purrr) # to conveniently work with list objects
+library(purrr)
+library(vctrs)
+# to conveniently work with list objects
 # set path to inp
 inp_path <-setwd("C:/Users/SSinnath/Research/Urban_Pesticide_Modeling/pleasant_swmm/input")
 
