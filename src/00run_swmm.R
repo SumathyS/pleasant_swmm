@@ -29,6 +29,10 @@ version
 
 
 #set some default directories based on machine location
+#Tom's linux
+if(Sys.info()[4]=="d2626ut7920d.rtpnc.epa.gov"){
+  swmmdir <- "~/git/pleasant_swmm/"
+}
 #Tom's mac air
 if(Sys.info()[4]=="stp-air"){
   swmmdir <- "~/git/pleasant_swmm/"
