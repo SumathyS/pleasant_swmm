@@ -8,7 +8,7 @@ library(purrr)
 library(vctrs)
 # to conveniently work with list objects
 # set path to inp
-inp_path <-setwd("C:/Users/SSinnath/Research/Urban_Pesticide_Modeling/pleasant_swmm/input")
+inp_path <-setwd(swmmdir_input)
 
 # glance model structure, the result is a list of data.frames with SWMM sections
 inp <- read_inp("NPlesantCreek.inp")

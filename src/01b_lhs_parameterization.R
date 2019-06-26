@@ -1,6 +1,3 @@
-#install.packages("lhs")
-#import lhs library
-library(lhs)
 #list input paramters
 input_parameters <- c("NImperv","NPerv")
 
